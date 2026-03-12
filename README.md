@@ -23,12 +23,31 @@ Beyond point estimates, the flow matching formulation models $p(z \mid c)$ as a 
 
 ## Architecture
 
-```
-  Text ───── T5 ──────────────┐
-  Image ──── CLIP / SigLIP ───┤
-  Video ──── Frame Encoder ───┤── ConditioningOutput ──► Stage 1: Flow Matching ──► Stage 2: Stable Audio DiT ──► 44.1 kHz
-  Audio ──── MuQ-MuLan ───────┤       [B, L, 768]        Transformer (16L)          DiT (24L) + Oobleck VAE
-  Any ────── MLLM Bridge ─────┘                           noise → latent [512]       latent → waveform
+```mermaid
+graph LR
+    subgraph Perception["<b>Perception Layer</b> (frozen)"]
+        T["🔤 Text"] --> T5["Flan-T5"]
+        I["🖼️ Image"] --> CLIP["CLIP / SigLIP"]
+        V["🎬 Video"] --> VF["Frame Encoder"]
+        A["🎵 Audio"] --> MQ["MuQ-MuLan"]
+        X["✳️ Any"] --> MB["MLLM Bridge<br/><i>Gemma-3 → T5</i>"]
+    end
+
+    subgraph Generation["<b>Stage 1</b>: Flow Matching"]
+        FM["Cross-Attention<br/>Transformer<br/><i>16L · 1024d</i>"]
+    end
+
+    subgraph Synthesis["<b>Stage 2</b>: Audio Synthesis"]
+        DiT["Stable Audio DiT<br/><i>24L</i> + Oobleck VAE"]
+    end
+
+    T5 & CLIP & VF & MQ & MB -->|"ConditioningOutput<br/>[B, L, 768]"| FM
+    FM -->|"MuQ-MuLan<br/>[B, 512]"| DiT
+    DiT -->|"44.1 kHz<br/>stereo"| Out["🔊 Audio"]
+
+    style Perception fill:#f0f4ff,stroke:#4a6fa5
+    style Generation fill:#fff4e6,stroke:#c67700
+    style Synthesis fill:#e8f5e9,stroke:#2e7d32
 ```
 
 **Core insight**: Stage 2 is modality-agnostic — it only sees a 512-dim MuQ-MuLan vector. Adding a new modality = one encoder + one Stage 1 training run. The MLLM bridge (Gemma-3 → T5) enables zero-shot input from *any* modality with no training at all.
