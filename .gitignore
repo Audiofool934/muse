@@ -28,6 +28,9 @@ ckpt/
 # Data
 data/
 
+# Course materials
+course/
+
 # IDE
 .idea/
 .vscode/
