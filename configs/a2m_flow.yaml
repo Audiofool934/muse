@@ -1,0 +1,39 @@
+# MUSE: Audio-to-Music (style transfer)
+# Reference audio → MuQ-MuLan → Flow Matching → new audio
+# The input audio provides stylistic/timbral conditioning
+
+perception:
+  type: muq_mulan
+  model_name: OpenMuQ/MuQ-MuLan-large
+  target_dim: 768          # Project 512 -> 768 for Stage 1 compatibility
+
+stage1:
+  checkpoint: checkpoints/a2m_flow/best.pt  # Needs training
+  params:
+    cond_dim: 768
+    latent_dim: 512
+    max_seq_len: 1
+    d_model: 1024
+    depth: 16
+    heads: 16
+    dropout: 0.1
+    unconditional_prob: 0.1
+
+stage2:
+  checkpoint: checkpoints/stage2_mulan/best_stage2.pt  # Reuse t2m's Stage 2
+  params:
+    audiocodec_ckpt_path: ckpt/stable-audio-open-1.0/vae
+    ckpt_dir_audio_dit: ckpt/stable-audio-open-1.0/transformer
+    cond_dim: 512
+    latent_length: 256
+    dit_num_layers: 24
+    unconditional_prob: 0.3
+
+inference:
+  stage1_num_steps: 50
+  stage1_guidance: 2.0
+  stage1_method: midpoint
+  stage2_num_steps: 50
+  stage2_guidance: 3.0
+  stage2_method: dopri5
+  sample_rate: 44100

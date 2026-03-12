@@ -1,0 +1,33 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Checkpoints and model weights
+checkpoints/
+ckpt/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.synctex.gz
+
+# Data
+data/
+
+# IDE
+.idea/
+.vscode/

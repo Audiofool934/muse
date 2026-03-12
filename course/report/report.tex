@@ -1,0 +1,254 @@
+% !TEX program = xelatex
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{ctex}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lipsum} % For dummy text
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{cite} % 用于美化引用格式
+\usetikzlibrary{arrows.meta, positioning, shapes.misc}
+
+
+\geometry{a4paper, margin=0.75in}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{AI+Music 现状、挑战与前沿展望}
+\fancyfoot[C]{\thepage}
+
+\title{AI+Music 现状、挑战与前沿展望 \\ \large 新文科人工智能导论 期中报告}
+\author{王胤博}
+\date{2025 年 10 月 22 日}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+% 本报告旨在对人工智能（AI）与音乐交叉领域的发展现状进行全面综述。
+随着深度学习技术的飞速发展，AI在音乐创作、制作、表演和消费等各个环节都展现出巨大的潜力。报告将梳理该领域的主要研究进展、关键技术、代表性公司和应用，并探讨其面临的挑战与未来发展趋势。重点将关注AI音乐生成技术的演进，以及其对传统音乐产业带来的深刻影响，并结合前沿研究构想，探讨构建统一音乐智能体的可能性。
+\end{abstract}
+
+% \newpage
+
+\tableofcontents
+
+\newpage
+
+\section{引言}
+
+人工智能与音乐的结合并非一个全新的概念，其渊源可以追溯到上世纪中叶。当时的研究主要聚焦于“算法作曲”（Algorithmic Composition），即利用计算机执行一套预设的规则和概率模型来生成音乐。
+
+然而直到近年来，随着计算能力的指数级增长和深度学习算法的突破，AI音乐才真正从理论研究走向实际应用，并开始对音乐产业产生实质性的影响。从自动作曲、智能编曲到个性化音乐推荐，AI技术正在重塑音乐的创作与传播方式。
+
+本报告希望能够系统性地梳理AI在音乐领域的应用和研究现状。我们将首先回顾AI音乐的发展历程，接着深入探讨其核心技术，特别是基于深度学习的音乐生成模型。随后，报告将介绍该领域的头部公司和代表性产品，分析它们的商业模式和市场格局。最后，我们将讨论AI音乐所面临的版权、伦理等挑战，并介绍\textbf{MUSE (Music Unified State-space Engine)}的构想，展望其未来的发展方向。
+
+\section{AI音乐的发展历程与研究现状}
+
+AI音乐的研究最早可以追溯到20世纪50年代，但早期的研究主要基于规则和算法，生成的音乐较为机械和缺乏情感。近年来，深度学习技术的兴起为AI音乐研究带来了革命性的突破。
+
+\subsection{早期基于规则和算法的尝试}
+
+早期的AI音乐研究主要采用基于规则的系统和马尔可夫链等统计模型来生成音乐。这些方法的优点是逻辑清晰、易于理解,但缺点是生成的音乐风格单一,缺乏创造性和情感表达。里程碑式的作品是1957年诞生的《伊利亚克组曲》（Illiac Suite）\cite{illiac1957},它由ILLIAC I计算机通过执行严格的音乐理论规则和马尔可夫链模型生成乐谱。几乎在同一时期,贝尔实验室以马克斯·马修斯（Max Mathews）为首的团队开创了计算机声音合成的先河,让机器首次能够直接生成数字音频。这些早期的探索虽不具备现代AI的"学习"能力,但它们在概念和技术上为今天的人工智能音乐奠定了重要基石。
+
+\subsection{深度学习带来的变革}
+
+随着深度学习技术的发展，研究人员开始使用神经网络模型来学习和生成音乐。循环神经网络（RNN）及其变体长短期记忆网络（LSTM）\cite{hochreiter1997long}能够有效处理序列数据，因此被广泛应用于音乐生成。近年来，生成对抗网络（GAN）\cite{goodfellow2014generative}和Transformer\cite{vaswani2017attention}等更先进的模型进一步提升了AI音乐的生成质量和多样性。
+
+目前，AI音乐的研究主要涵盖以下几个方面：
+\begin{itemize}
+    \item \textbf{音乐生成（Music Generation）}：这是AI音乐领域最核心的研究方向之一，旨在让AI能够创作出具有特定风格、旋律和和声的音乐作品。
+    \item \textbf{音乐信息检索（Music Information Retrieval）}：利用AI技术对音乐进行风格分类、情感识别、音频指纹识别等。
+    \item \textbf{音乐语义分析（Music Semantic Analysis）}：通过分析音乐的声学特征，识别其所表达的语义信息。
+    \item \textbf{人机协同创作（Human-AI Collaborative Composition）}：研究如何让AI辅助人类音乐家进行创作，激发创作灵感。
+\end{itemize}
+
+2023年，谷歌发布的MusicLM \cite{agostinelli2023musiclm}和Meta推出的MusicGen \cite{copet2023simple}被认为是在技术上具有里程碑意义的模型，它们能够根据文本提示生成长达数分钟的高保真音乐。与此同时，在更广泛的文本到音频生成领域，AudioLDM及其后续版本AudioLDM 2等模型的成功 \cite{liu2023audioldm, liu2023audioldm2}，也为AI音乐的发展提供了重要的技术借鉴。而Suno和Udio则在生成带有人声的完整歌曲方面取得了显著突破，极大地降低了音乐创作的门槛。
+
+\section{核心技术：AI音乐生成模型}
+
+AI音乐生成是当前最受关注的应用方向。其核心在于利用强大的深度学习模型，通过学习海量的音乐数据，掌握音乐的内在规律和风格特征，从而创作出全新的音乐。
+
+\subsection{主流技术路线}
+当前的AI音乐生成主要有两条技术路线：
+
+\begin{itemize}
+    \item \textbf{符号模型（Symbolic Model）}：该模型主要处理MIDI等符号化的音乐数据，学习的是乐理规则、音符关系等。其优点是能够生成结构清晰的乐谱，但可能缺乏真实演奏的细节和表现力。
+    \item \textbf{音频模型（Audio Model）}：该模型直接处理原始的音频波形数据，端到端地生成音乐。这种方式生成的音乐更加自然流畅，能够包含丰富的音色和演奏细节，是目前业界更受欢迎的路线。 谷歌的MusicLM \cite{agostinelli2023musiclm}和Meta的MusicGen \cite{copet2023simple}是音频模型的代表。
+\end{itemize}
+
+\subsection{关键模型架构}
+多种深度学习模型被应用于音乐生成，各自具有不同的特点：
+\begin{itemize}
+    \item \textbf{循环神经网络 (RNN) / 长短期记忆网络 (LSTM)} \cite{hochreiter1997long}: 这类模型擅长处理序列数据，能够捕捉音乐在时间上的依赖关系，是早期音乐生成研究中的常用模型。
+    \item \textbf{生成对抗网络 (GAN)} \cite{goodfellow2014generative}: GAN由一个生成器和一个判别器组成，通过二者的相互博弈来生成高质量的音乐。代表性工作有Hi-FiGAN \cite{kong2020hifi}，该模型在语音合成领域表现出色，并被迁移应用于音乐生成任务中。
+    \item \textbf{Transformer} \cite{vaswani2017attention}: Transformer模型凭借其强大的并行计算能力和对长序列的建模能力，在近年来的音乐生成任务中取得了显著成果，奠定了现代文生音乐的基本架构。代表性工作有MusicLM \cite{agostinelli2023musiclm}和MusicGen \cite{copet2023simple}。
+    \item \textbf{扩散模型 (Diffusion Model)} \cite{ho2020denoising}: 扩散模型通过从噪声中逐步去噪来生成数据，在音频生成领域也展现出了巨大的潜力。代表性工作有AudioLDM \cite{liu2023audioldm}。
+\end{itemize}
+
+\section{产业格局：主要公司与应用}
+
+在技术突破的推动下，AI音乐领域涌现出一批备受瞩目的初创公司，并吸引了大量资本的关注。
+
+\subsection{代表性公司和产品}
+\begin{itemize}
+    \item \textbf{Suno AI}: Suno是目前AI音乐领域的领军者之一，其推出的同名产品能够让用户通过简单的文本提示，在短时间内生成包含旋律、歌词和人声的完整歌曲。 Suno因其极低的操作门槛和高质量的生成效果而迅速走红。 据报道，Suno的年经常性收入已超过1亿美元，并正在以超过20亿美元的估值进行新一轮融资。
+    \item \textbf{Udio}: Udio是Suno的主要竞争对手，同样专注于通过文本生成高质量的完整歌曲。Udio在推出后也获得了广泛关注，并与Suno一同面临来自传统唱片公司的版权诉讼。
+    % \item \textbf{AIVA (Artificial Intelligence Virtual Artist)}: AIVA Technologies是一家早期专注于AI音乐创作的公司，主要为电影、游戏、广告等领域提供配乐生成服务。
+    % \item \textbf{Amper Music}: Amper Music是另一个较早进入该领域的公司，后被素材库公司Shutterstock收购，专注于为内容创作者提供快速、可定制的背景音乐。
+    \item \textbf{Google (MusicLM)} 与 \textbf{Meta (MusicGen)}: 作为科技巨头，谷歌和Meta在AI音乐的基础研究方面投入巨大，其发布的模型为整个领域的技术发展奠定了重要基础。
+\end{itemize}
+
+\subsection{商业应用场景}
+AI音乐的应用场景日益广泛，主要包括：
+\begin{itemize}
+    \item \textbf{内容创作领域的背景音乐}: 为视频博主、游戏开发者、广告商等提供快速、低成本且无版权问题的配乐。
+    \item \textbf{辅助音乐创作}: 帮助音乐人克服创作瓶颈，提供新的旋律、和声和节奏灵感。
+    \item \textbf{个性化音乐体验}: 根据用户的情绪、场景和偏好，实时生成符合其需求的音乐。
+    \item \textbf{音乐教育}: 作为辅助工具，帮助音乐学生学习作曲和乐理知识。
+\end{itemize}
+
+\section{挑战与未来展望}
+
+尽管AI音乐取得了令人瞩目的进展，但其发展依然面临着技术、法律和伦理等多方面的挑战。
+
+\subsection{面临的挑战}
+\begin{itemize}
+    \item \textbf{版权问题}: 这是AI音乐领域当前最核心的争议。AI模型的训练需要大量的音乐数据，这不可避免地会涉及到现有受版权保护的音乐作品。环球、华纳等大型唱片公司已经对Suno和Udio提起诉讼，指控其侵犯版权。 如何在保护创作者权益和推动技术发展之间取得平衡，是整个行业亟待解决的问题。
+    \item \textbf{作品的原创性与艺术性}: AI生成的音乐是否能被视为真正的“创作”？其版权归属如何界定？此外，尽管当前AI能够生成技术上成熟的音乐，但在情感深度和艺术创新性方面，与人类顶尖音乐家的作品相比仍有差距。
+    \item \textbf{技术瓶颈与语义割裂}: 除了长时结构一致性的挑战外，当前AI音乐系统普遍存在“各自为政”的问题。例如，用于\textbf{音乐理解}（如检索、分类）的模型、用于\textbf{个性化推荐}的模型和用于\textbf{内容生成}的模型，其底层的语义表示（representation）往往是相互独立的，导致语义空间割裂。这使得文本-音乐对齐较弱、生成内容难以进行精细的结构化控制，并且对新用户的冷启动推荐效果不佳。
+\end{itemize}
+
+\subsection{未来发展趋势}
+\begin{itemize}
+    \item \textbf{技术与产品的持续迭代}: 未来，AI音乐生成模型将在音质、可控性和多样性方面继续提升。会出现更多专业的、面向音乐制作流程的AI工具，实现与人类创作者的深度融合。
+    \item \textbf{商业模式的成熟与法律框架的完善}: 随着行业的发展，AI音乐公司与版权方可能会探索出新的授权与分润模式。 同时，相关的法律法规也将逐步完善，为行业的健康发展提供保障。
+    \item \textbf{跨学科融合}: AI音乐将与脑科学、认知科学等领域进行更深入的融合，探索音乐对人类情感和认知的影响机制，从而在音乐治疗、情感计算等领域发挥更大作用。
+    \item \textbf{走向统一模型}: 为了解决前述语义割裂的问题，构建一个能够打通音乐理解、推荐和生成的统一模型，将是未来重要的发展方向。通过共享一个强大而丰富的音乐状态空间，实现真正的音乐智能闭环。
+\end{itemize}
+
+
+\subsection{前沿探索：构建统一音乐状态空间的MUSE构想}
+针对前文所述的AI音乐系统语义割裂的问题，我们提出一个名为\textbf{MUSE (Music Unified State-space Engine)}的整合性技术构想。该构想旨在设计一个统一的音乐潜空间（latent space），并以此为基础，将音乐的\textbf{理解、推荐、生成}三大核心任务融为一体，形成一个高效、自洽的音乐智能闭环。
+
+\subsubsection{动机与核心理念}
+本构想的提出，其核心动机在于解决语义割裂问题，而技术灵感则主要来源于计算机视觉领域的RAE（Representation Autoencoder）范式 \cite{pourheydari2024rae}。RAE验证了一条成功路径：\textit{利用强大的预训练模型提取高维度的、富含信息的token序列作为表征，然后在此表征上训练生成模型（如扩散模型），并配合一个对噪声鲁棒的解码器进行重构}。
+
+因此，本报告提出的MUSE构想旨在将这一范式迁移到音乐领域。其核心理念是：一个“好的音乐状态空间”是实现应用闭环的前提。这个空间必须满足：
+\begin{itemize}
+    \item \textbf{语义充分}：能够捕捉音乐的音色、风格、情感等多维度信息。
+    \item \textbf{结构感知}：能够编码音乐的节拍、和弦、段落等结构化信息。
+    \item \textbf{可控生成}：能够作为生成模型的起点，实现对音乐属性的精确控制。
+\end{itemize}
+
+\subsubsection{技术方案与架构}
+为实现上述目标，MUSE构想可设计为一个包含三大模块的技术路径：
+\begin{enumerate}
+    \item \textbf{参数冻结的表征编码器 (Frozen Representation Encoder)}: 这一步是构建高质量潜空间的基石。本方案建议融合多种强大的预训练模型，并冻结其参数，以提取音乐的不同方面特征：
+    \begin{itemize}
+        \item \textbf{自监督音乐模型}：如 MERT \cite{li2023mert}, AST \cite{gong2021ast}, PaSST \cite{koutini2022passt}，用于提取音色、风格、节奏等底层声学特征。
+        \item \textbf{跨模态对齐模型}：如 CLAP \cite{elizalde2023clap}, MuLan \cite{huang2022mulan}，通过蒸馏学习获得与文本对齐的语义特征，保证了音乐的可检索性。
+        \item \textbf{结构编码器 (可选)}：专门用于提取节拍、和弦、段落等音乐结构事件。
+    \end{itemize}
+
+    \item \textbf{维度对齐与序列融合 (Alignment and Fusion)}: 来自不同编码器的特征是异构的token序列（例如 \(\mathbf{Z}\in\mathbb{R}^{N\times d}\)，其中 \(N\) 是token数，\(d\) 是维度）。需要先通过线性投影将它们的通道维度 \(d_i\) 对齐到一个统一维度 \(d_*\)，然后将这些序列融合成一个统一的 latent。融合方式可以是简单的拼接（Concat），或是更复杂的基于时间网格的对齐，甚至是利用Perceiver \cite{jaegle2021perceiver}等模型进行压缩。
+
+    \item \textbf{生成与解码 (Generation and Decoding)}: 在融合后的统一 latent 上训练生成模型。
+    \begin{itemize}
+        \item \textbf{生成模型}：建议使用擅长处理高维token序列的DiT (Diffusion Transformer) \cite{peebles2023scalable}。为了适应不同长度和维度的latent，可采用特殊的\textbf{维度化噪声日程 (Dimensionalized Noise Schedule)}，即根据latent的总维度 \(m=N_{lat}\cdot d_*\) 来调整噪声注入策略，以保证训练的稳定性。
+        \item \textbf{解码器}：解码器负责将生成模型输出的latent还原为音频。为提高鲁棒性，解码器在训练时需要进行\textbf{噪声增强 (Noise Augmentation)}，即对输入的latent主动添加噪声。解码路径可以是重构频谱后通过声码器（如HiFi-GAN \cite{kong2020hifi}）合成波形，也可以是直接对齐到某个神经音频编解码器（如EnCodec \cite{defossez2022high})的码本上。
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{应用闭环展望}
+一旦构建了这样一个强大的统一潜空间，就能形成一个闭环：
+\begin{itemize}
+    \item \textbf{理解与检索}：音乐被编码到潜空间后，可以直接用于文本-音乐的跨模态检索、相似歌曲查找等任务。
+    \item \textbf{推荐系统}：可以构建基于此潜空间的双塔模型。用户塔聚合其历史听歌记录的latent，物品塔直接使用歌曲的latent。通过FAISS等工具进行高效的向量近邻搜索，解决冷启动问题并提升推荐质量。
+    \item \textbf{生成与编辑}：将文本、结构、音色等条件也编码到此潜空间中，通过条件化扩散模型生成新的音乐。由于latent本身蕴含结构信息，因此可以实现段落、节拍级别的精细可控生成与编辑。
+\end{itemize}
+总而言之，MUSE构想是一种从“模型各自为政”迈向“大一统模型”的探索性思路，其目标在于从根本上解决当前AI音乐领域面临的语义鸿沟和可控性难题，为下一代音乐智能体的构建指明一个潜在的发展方向。
+
+\section{结论}
+
+人工智能正在以前所未有的深度和广度渗透到音乐领域，从根本上改变着音乐的创作、生产和消费模式。以Suno、Udio为代表的AI音乐生成应用的爆红，标志着这项技术已经从实验室走向大众，并展现出巨大的商业潜力。
+
+尽管目前AI音乐在版权、伦理等方面仍面临诸多挑战，但其发展的趋势已不可逆转。更进一步地，如本报告所提出的MUSE统一模型构想，预示着该领域的未来将不仅仅是生成质量的提升，更在于构建能够整合理解、推荐和生成的智能闭环。未来，AI将不再仅仅是工具，更有可能成为人类音乐家的创作伙伴，共同探索音乐表达的全新疆域。随着技术的不断成熟和产业生态的逐步完善，我们有理由相信，AI+Music将开启一个充满无限可能性的新时代。
+
+% \newpage
+
+\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{illiac1957}
+``ILLIAC Suite,'' Distributed Museum, University of Illinois. [Online]. Available: \url{https://distributedmuseum.illinois.edu/exhibit/illiac-suite/}
+
+\bibitem{hochreiter1997long}
+S. Hochreiter and J. Schmidhuber, ``Long short-term memory,'' \textit{Neural Computation}, vol. 9, no. 8, pp. 1735--1780, 1997. DOI: 10.1162/neco.1997.9.8.1735.
+
+\bibitem{goodfellow2014generative}
+I. J. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, ``Generative adversarial networks,'' in \textit{Advances in Neural Information Processing Systems}, vol. 27, 2014, pp. 2672--2680. arXiv:1406.2661.
+
+\bibitem{vaswani2017attention}
+A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin, ``Attention is all you need,'' in \textit{Advances in Neural Information Processing Systems}, vol. 30, 2017, pp. 5998--6008. arXiv:1706.03762.
+
+\bibitem{agostinelli2023musiclm}
+A. Agostinelli, T. I. Denk, Z. Borsos, J. Engel, M. Verzetti, A. Caillon, Q. Huang, A. Jansen, A. Roberts, M. Tagliasacchi, M. Sharifi, N. Zeghidour, and C. Frank, ``MusicLM: Generating music from text,'' \textit{arXiv preprint arXiv:2301.11325}, 2023.
+
+\bibitem{copet2023simple}
+J. Copet, F. Kreuk, I. Gat, T. Remez, D. Kant, G. Synnaeve, Y. Adi, and A. Défossez, ``Simple and controllable music generation,'' \textit{arXiv preprint arXiv:2306.05284}, 2023.
+
+\bibitem{liu2023audioldm}
+H. Liu, Z. Chen, Y. Yuan, X. Mei, X. Liu, D. Mandic, W. Wang, and M. D. Plumbley, ``AudioLDM: Text-to-Audio Generation with Latent Diffusion Models,'' \textit{arXiv preprint arXiv:2301.12503}, 2023.
+
+\bibitem{liu2023audioldm2}
+H. Liu, Y. Yuan, X. Liu, X. Mei, Q. Kong, Q. Tian, Y. Wang, W. Wang, Y. Wang, and M. D. Plumbley, ``AudioLDM 2: Learning holistic audio generation with self-supervised pretraining,'' \textit{arXiv preprint arXiv:2308.05734}, 2024.
+
+\bibitem{kong2020hifi}
+J. Kong, J. Kim, and J. Bae, ``HiFi-GAN: Generative adversarial networks for efficient and high fidelity speech synthesis,'' \textit{arXiv preprint arXiv:2010.05646}, 2020.
+
+\bibitem{dhariwal2020jukebox}
+P. Dhariwal, H. Jun, C. Payne, J. W. Kim, A. Radford, and I. Sutskever, ``Jukebox: A generative model for music,'' \textit{arXiv preprint arXiv:2005.00341}, 2020.
+
+\bibitem{ho2020denoising}
+J. Ho, A. Jain, and P. Abbeel, ``Denoising diffusion probabilistic models,'' in \textit{Advances in Neural Information Processing Systems}, vol. 33, 2020, pp. 6840--6851.
+
+\bibitem{pourheydari2024rae}
+B. Zheng, N. Ma, S. Tong, and S. Xie, ``Diffusion transformers with representation autoencoders,'' \textit{arXiv preprint arXiv:2510.11690}, 2025.
+
+\bibitem{li2023mert}
+Y. Li, R. Yuan, G. Zhang, Y. Ma, X. Chen, H. Yin, C. Xiao, C. Lin, A. Ragni, E. Benetos, N. Gyenge, R. Dannenberg, R. Liu, W. Chen, G. Xia, Y. Shi, W. Huang, Z. Wang, Y. Guo, and J. Fu, ``MERT: Acoustic music understanding model with large-scale self-supervised training,'' \textit{arXiv preprint arXiv:2306.00107}, 2024.
+
+\bibitem{gong2021ast}
+Y. Gong, Y.-A. Chung, and J. Glass, ``AST: Audio spectrogram transformer,'' \textit{arXiv preprint arXiv:2104.01778}, 2021.
+
+\bibitem{koutini2022passt}
+K. Koutini, J. Schlüter, H. Eghbal-zadeh, and G. Widmer, ``PaSST: Efficient training of audio transformers with patchout,'' in \textit{Interspeech 2022}, 2022. DOI: 10.21437/Interspeech.2022-227.
+
+\bibitem{elizalde2023clap}
+B. Elizalde, S. Deshmukh, M. Al Ismail, and H. Wang, ``CLAP: Learning audio concepts from natural language supervision,'' \textit{arXiv preprint arXiv:2206.04769}, 2022.
+
+\bibitem{huang2022mulan}
+Q. Huang, A. Jansen, J. Lee, R. Ganti, J. Y. Li, and D. P. W. Ellis, ``MuLan: A joint embedding of music audio and natural language,'' \textit{arXiv preprint arXiv:2208.12415}, 2022.
+
+\bibitem{jaegle2021perceiver}
+A. Jaegle, F. Gimeno, A. Brock, A. Zisserman, O. Vinyals, and J. Carreira, ``Perceiver: General perception with iterative attention,'' \textit{arXiv preprint arXiv:2103.03206}, 2021.
+
+\bibitem{peebles2023scalable}
+W. Peebles and S. Xie, ``Scalable diffusion models with transformers,'' \textit{arXiv preprint arXiv:2212.09748}, 2023.
+
+\bibitem{defossez2022high}
+A. Défossez, J. Copet, G. Synnaeve, and Y. Adi, ``High fidelity neural audio compression,'' \textit{arXiv preprint arXiv:2210.13438}, 2022.
+
+\end{thebibliography}
+
+\end{document}

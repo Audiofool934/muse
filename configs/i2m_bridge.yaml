@@ -1,0 +1,41 @@
+# MUSE: Image-to-Music via MLLM Text Bridge
+# WeaveWave-style zero-shot approach: Image → Gemma-3 → text → T5 → Flow → Audio
+# No modality-specific training needed!
+
+perception:
+  type: mllm_bridge
+  mllm_model_name: google/gemma-3-12b-it
+  t5_model_name: google/flan-t5-base
+  input_modality: image
+  mllm_max_new_tokens: 200
+
+stage1:
+  checkpoint: checkpoints/stage1_flow_mulan/best.pt  # Reuse t2m's Stage 1!
+  params:
+    cond_dim: 768
+    latent_dim: 512
+    max_seq_len: 1
+    d_model: 1024
+    depth: 16
+    heads: 16
+    dropout: 0.1
+    unconditional_prob: 0.1
+
+stage2:
+  checkpoint: checkpoints/stage2_mulan/best_stage2.pt
+  params:
+    audiocodec_ckpt_path: ckpt/stable-audio-open-1.0/vae
+    ckpt_dir_audio_dit: ckpt/stable-audio-open-1.0/transformer
+    cond_dim: 512
+    latent_length: 256
+    dit_num_layers: 24
+    unconditional_prob: 0.3
+
+inference:
+  stage1_num_steps: 50
+  stage1_guidance: 1.5
+  stage1_method: midpoint
+  stage2_num_steps: 50
+  stage2_guidance: 3.0
+  stage2_method: dopri5
+  sample_rate: 44100
