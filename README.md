@@ -45,9 +45,6 @@ graph LR
     FM -->|"MuQ-MuLan<br/>[B, 512]"| DiT
     DiT -->|"44.1 kHz<br/>stereo"| Out["🔊 Audio"]
 
-    style Perception fill:#f0f4ff,stroke:#4a6fa5
-    style Generation fill:#fff4e6,stroke:#c67700
-    style Synthesis fill:#e8f5e9,stroke:#2e7d32
 ```
 
 **Core insight**: Stage 2 is modality-agnostic — it only sees a 512-dim MuQ-MuLan vector. Adding a new modality = one encoder + one Stage 1 training run. The MLLM bridge (Gemma-3 → T5) enables zero-shot input from *any* modality with no training at all.
