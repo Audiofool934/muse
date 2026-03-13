@@ -86,11 +86,11 @@ audio = pipe.generate("sunset.jpg")
 
 Both stages use **Conditional Flow Matching** (Lipman et al., ICLR 2023) with the OT-affine path:
 
-$$x_t = (1-t)\,x_0 + t\,x_1, \quad v_\theta(x_t, t, c) \approx x_1 - x_0$$
+$$x_t = (1-t) \cdot x_0 + t \cdot x_1, \quad v_\theta(x_t, t, c) \approx x_1 - x_0$$
 
 At inference, an ODE solver integrates from Gaussian noise to data. Classifier-free guidance steers generation:
 
-$$v_\text{guided} = v_\text{uncond} + w\,(v_\text{cond} - v_\text{uncond})$$
+$$v_\text{guided} = v_\text{uncond} + w \cdot (v_\text{cond} - v_\text{uncond})$$
 
 All modalities pass through a **MuQ-MuLan bottleneck** (512-dim, L2-normalized) — a contrastive audio-text space that provides semantic alignment and a shared interface for Stage 2.
 
